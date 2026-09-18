@@ -73,17 +73,19 @@ Required environment variables in `.env`:
 - `OPENAI_API_KEY` - OpenAI API for LLM
 - `SCRAPIN_API_KEY` - Scrapin.io for LinkedIn data
 - `TAVILY_API_KEY` - Tavily for web search
-- `TWITTER_API_KEY`, `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, `TWITTER_ACCESS_SECRET` - Optional Twitter API
+- `TWITTER_API_KEY`, `TWITTER_API_KEY_SECRET`, `TWITTER_BEARER_TOKEN`, `TWITTER_ACCESS_TOKEN`, `TWITTER_ACCESS_TOKEN_SECRET` - Twitter API (see note below)
 
 Optional LangSmith tracing:
 - `LANGCHAIN_TRACING_V2=true`
 - `LANGCHAIN_API_KEY`
 - `LANGCHAIN_PROJECT=ice_breaker`
 
+Note: `.env.example` is stale — it lists `PROXYCURL_API_KEY` instead of the `SCRAPIN_API_KEY` the code actually reads (`third_parties/linkedin.py`).
+
 ## Development Notes
 
 - The application uses GPT-4o-mini for agents and GPT-3.5-turbo for chains
-- Twitter integration has a mock implementation (`scrape_user_tweets_mock`) for testing
+- `ice_breaker.py` always calls `scrape_user_tweets_mock`, never the real `scrape_user_tweets` — but `third_parties/twitter.py` builds its `tweepy.Client` at module import time via `os.environ[...]` (not `.get`), so **all five Twitter env vars must still be set** or importing the module raises `KeyError`, even though no live Twitter API call is made
 - Flask runs in debug mode by default on host 0.0.0.0
-- LangChain agents use verbose mode for debugging
+- LangChain agents use verbose mode for debugging and pull their ReAct prompt from LangChain Hub (`hwchase17/react`) at runtime, which requires network access
 - No unit tests are currently implemented despite pytest being mentioned
