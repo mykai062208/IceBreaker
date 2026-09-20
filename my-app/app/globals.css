@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f2eee3;
+  --ink: #111111;
+  --lime: #c8f43a;
+  --flame: #ff5a2c;
+  --violet: #8064ff;
+  --sky: #7fd6ff;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-lime: var(--lime);
+  --color-flame: var(--flame);
+  --color-violet: var(--violet);
+  --color-sky: var(--sky);
+  --font-display: var(--font-bricolage);
+  --font-mono: var(--font-space-mono);
+  --shadow-hard: 6px 6px 0 0 var(--ink);
+  --shadow-hard-sm: 3px 3px 0 0 var(--ink);
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  /* dot grid */
+  background-image: radial-gradient(rgb(17 17 17 / 0.16) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+::selection {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+/* Brutalist press-down buttons and cards */
+.hard {
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+}
+
+.press {
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.press:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 0 var(--ink);
+}
+.press:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 0 var(--ink);
+}
+
+/* Event marquee */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 32s linear infinite;
+}
+
+/* Blinking terminal cursor */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.cursor {
+  animation: blink 1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .cursor {
+    animation: none;
+  }
+  .press,
+  html {
+    transition: none;
+    scroll-behavior: auto;
+  }
+}
